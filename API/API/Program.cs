@@ -5,8 +5,17 @@ using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<AppDataContext>();
 
-var app = builder.Build();
 
+ 
+//Configurar a política de CORS
+builder.Services.AddCors(options =>
+    options.AddPolicy("Acesso Total",
+        configs => configs
+            .AllowAnyOrigin()
+            .AllowAnyHeader()
+            .AllowAnyMethod())
+);
+    var app = builder.Build(); 
 
 app.MapGet("/", () => "Prova A1");
 
@@ -71,5 +80,5 @@ app.MapGet("/tarefas/concluidas", ([FromServices] AppDataContext ctx) =>
 {
     //Implementar a listagem de tarefas concluídas
 });
-
+app.UseCors("Acesso Total");
 app.Run();
